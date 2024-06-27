@@ -1,0 +1,11 @@
+{
+  trailingComma: 'none',
+  singleQuote: true,
+  /* The default value of maxLineLength for Google Java format is 100 characters.
+     The google-java-format does not support the maxLineLength option in the current version of the spotless-maven-plugin (only for Gradle).
+     Both the BE and FE app should have a maxLineLength of 100 for consistency. */
+  printWidth: 100,
+  bracketSameLine: true,
+  arrowParens: 'avoid',
+  singleAttributePerLine: true
+}
