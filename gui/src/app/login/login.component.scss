@@ -1,31 +1,76 @@
-section {
-  display: table;
+* {
+  box-sizing: border-box;
 }
 
-.example-label {
-  display: table-cell;
-  font-size: 14px;
-  margin-left: 8px;
-  min-width: 120px;
+.sign-in-container {
+  max-width: 320px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.example-button-row {
-  display: table-cell;
-  max-width: 600px;
+h1 {
+  font-size: 24px;
+  margin-bottom: 5px;
 }
 
-.example-button-row .mat-mdc-button-base {
-  margin: 8px 8px 8px 0;
+p {
+  color: #666;
+  margin-bottom: 20px;
 }
 
-.example-flex-container {
+a {
+  color: #0077b5;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.form {
+  width: 100%;
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 16px;
+  align-content: center;
 }
 
-.example-button-container {
-  display: flex;
-  justify-content: center;
-  width: 120px;
+.input-field {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.password {
+  position: relative;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.show-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #0077b5;
+  cursor: pointer;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #0077b5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
