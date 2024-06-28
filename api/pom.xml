@@ -13,30 +13,33 @@
     <version>0.1.0-SNAPSHOT</version>
     <name>api</name>
     <description>api</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+
     <properties>
         <java.version>21</java.version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
         <google-java-format.version>1.22.0</google-java-format.version>
+        <io.jsonwebtoken.version>0.12.6</io.jsonwebtoken.version>
+        <project.build.openApiDirectory>${project.basedir}/src/main/resources/openapi</project.build.openApiDirectory>
+        <openapi-generator-maven-plugin.version>6.6.0</openapi-generator-maven-plugin.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <jsr305.version>3.0.2</jsr305.version>
+        <postgresql.version>42.7.3</postgresql.version>
+        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
+        <flyway-core.version>9.16.3</flyway-core.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -57,6 +60,45 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- JWT import-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${io.jsonwebtoken.version}</version>
+        </dependency>
+        <!-- END - JWT -->
+
+        <!-- BEGIN - OpenAPI -->
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${jackson-databind-nullable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>${jsr305.version}</version>
+        </dependency>
+        <!-- JSR 303 - Bean Validation API -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta.validation-api.version}</version>
+        </dependency>
+        <!-- END - OpenAPI -->
+
+        <!-- Other -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway-core.version}</version>
         </dependency>
     </dependencies>
 
@@ -100,6 +142,59 @@
                         <phase>validate</phase>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-davos-dcc-openapi</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <apiPackage>fullstack.api.openapi.api</apiPackage>
+                            <modelPackage>fullstack.api.openapi.model</modelPackage>
+                            <inputSpec>${project.build.openApiDirectory}/api.yaml</inputSpec>
+                            <ignoreFileOverride>${project.build.openApiDirectory}/.openapi-generator-ignore
+                            </ignoreFileOverride>
+                            <output>${project.basedir}/target/generated/openapi</output>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateModelTests>false</generateModelTests>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix>dto</modelNameSuffix>
+                            <verbose>false</verbose>
+                            <configOptions>
+                                <!-- We only declare values that we override the default values. Reference: https://openapi-generator.tech/docs/generators/spring -->
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>none</documentationProvider>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                <interfaceOnly>true</interfaceOnly>
+                                <serializableModel>true</serializableModel>
+                                <sourceFolder>java</sourceFolder>
+                                <unhandledException>true</unhandledException>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useOptional>true</useOptional>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useSwaggerUI>false</useSwaggerUI>
+                                <useTags>true</useTags>
+                                <generateConstructorWithAllArgs>false</generateConstructorWithAllArgs>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
+                            </configOptions>
+                            <typeMappings>
+                                <typeMapping>OffsetDateTime=Instant</typeMapping>
+                            </typeMappings>
+                            <importMappings>
+                                <importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
+                            </importMappings>
+                        </configuration>
+                    </execution>
+                </executions>
+
             </plugin>
         </plugins>
     </build>

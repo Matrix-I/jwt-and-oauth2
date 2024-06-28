@@ -1,0 +1,139 @@
+openapi: "3.0.0"
+info:
+  description: "FullStack Application"
+  version: "0.1.0-SNAPSHOT"
+  title: "api-service"
+
+paths:
+  "/auth/login":
+    post:
+      summary: "Login Api"
+      description: "Login Api"
+      operationId: "login"
+      tags:
+        - "user"
+      requestBody:
+        $ref: "#/components/requestBodies/LoginRequest"
+      responses:
+        "200":
+         "$ref": "#/components/responses/LoginResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  "/api/test":
+    get:
+      summary: "Test Api"
+      description: "Test Api"
+      operationId: "test"
+      tags:
+        - "user"
+      responses:
+        "200":
+          description: OK
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  schemas:
+    ErrorInfo:
+      description: "The error response."
+      type: "object"
+      properties:
+        url:
+          description: "The request URL of the failed call."
+          example: "https://localhost:8080/testapp/user1"
+          readOnly: true
+          type: "string"
+        err:
+          description: "The error message of the failed request."
+          example: "Unable to authenticate 'user1'."
+          readOnly: true
+          type: "string"
+        code:
+          description: "An optional code to further differentiate between error cases."
+          example: "PARTIAL_INCIDENT_CLEANUP"
+          readOnly: true
+          type: "string"
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        role:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        tokenType:
+          type: string
+  requestBodies:
+    LoginRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+            required:
+              - username
+              - password
+  responses:
+    LoginResponse:
+      description: "Login response"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginResponse"
+    NotFound:
+      description: "The specified resource was not found"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+    Unauthorized:
+      description: "Unauthorized"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+    BadRequest:
+      description: "BadRequest"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+    Forbidden:
+      description: "Forbidden"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+    InternalServerError:
+      description: "InternalServerError"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"

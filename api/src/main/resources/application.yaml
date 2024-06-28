@@ -1,1 +1,21 @@
-spring.application.name=api
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/fullstack"
+    username: "postgres"
+    password: "postgres"
+  flyway:
+    user: "postgres"
+    password: "postgres"
+    url: "jdbc:postgresql://localhost:5432/fullstack"
+    baseline-version: "0.0"
+    enabled: true
+    table: "flyway_schema_history"
+    baselineOnMigrate: true
+    locations: "classpath:db/migration"
+app:
+  jwt-properties:
+    secret: "This form allows you to generate random text strings. The randomness comes from atmospheric noise, which for many purposes is better than the pseudo-random number algorithms typically used in computer programs."
+    expire-time: 86400000
