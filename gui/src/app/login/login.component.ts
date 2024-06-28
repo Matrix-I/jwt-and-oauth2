@@ -1,6 +1,14 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { UserServiceImpl } from '../core/service/user.service';
+import { LoginRequest, LoginResponse } from '../../../generated-client';
 
 @Component({
   selector: 'app-login',
@@ -11,19 +19,24 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 })
 export class LoginComponent {
   signInForm: FormGroup = new FormGroup({
-    emailOrPhone: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(12)])
+    username: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(4)])
   });
 
   showPassword: boolean = false;
 
-  constructor() {
-  }
+  constructor(private userService: UserServiceImpl) {}
 
   onSubmit() {
     if (this.signInForm.valid) {
-      // Handle sign-in logic here
-      console.log('Form submitted', this.signInForm.value);
+      const loginRequest: LoginRequest = {
+        username: this.signInForm.controls['username'].value,
+        password: this.signInForm.controls['password'].value
+      };
+      this.userService.login(loginRequest).subscribe((response: LoginResponse) => {
+        localStorage.setItem('access_token', response.token || '');
+        console.log(response);
+      });
     }
   }
 
@@ -32,7 +45,6 @@ export class LoginComponent {
   }
 
   onForgotPassword() {
-    // Handle forgot password logic
     console.log('Forgot password clicked');
   }
 }

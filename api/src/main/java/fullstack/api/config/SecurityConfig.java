@@ -3,7 +3,6 @@ package fullstack.api.config;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableMethodSecurity
@@ -22,14 +20,7 @@ public class SecurityConfig {
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
   private static final String[] WHITE_LIST_URL = {
-    "/swagger-resources",
-    "/swagger-resources/**",
-    "/configuration/ui",
-    "/configuration/security",
-    "/swagger-ui/**",
-    "/webjars/**",
-    "/auth/*",
-    "/swagger-ui.html"
+    "/swagger-resources", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**", "/auth/*",
   };
 
   public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
@@ -43,7 +34,7 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable);
+    http.csrf(AbstractHttpConfigurer::disable);
 
     http.authorizeHttpRequests(
             authorize ->

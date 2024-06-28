@@ -1,7 +1,8 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import {
   provideRouter,
-  withEnabledBlockingInitialNavigation, withHashLocation,
+  withEnabledBlockingInitialNavigation,
+  withHashLocation,
   withInMemoryScrolling,
   withRouterConfig,
   withViewTransitions
@@ -12,7 +13,8 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes,
+    provideRouter(
+      routes,
       withRouterConfig({
         onSameUrlNavigation: 'reload'
       }),

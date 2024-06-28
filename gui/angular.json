@@ -63,7 +63,8 @@
               "buildTarget": "gui:build:production"
             },
             "development": {
-              "buildTarget": "gui:build:development"
+              "buildTarget": "gui:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

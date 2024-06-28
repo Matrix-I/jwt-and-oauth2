@@ -8,8 +8,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideRouter(routes),
+  providers: [
+    provideRouter(routes),
     provideAnimations(),
     provideHttpClient(),
-    importProvidersFrom(MatNativeDateModule)]
+    importProvidersFrom(MatNativeDateModule)
+  ]
 }).catch(err => console.error(err));

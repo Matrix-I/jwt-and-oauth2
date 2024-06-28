@@ -2,17 +2,40 @@
   <h1>Sign in</h1>
   <p>Stay updated on your professional world</p>
 
-  <div class="form" [formGroup]="signInForm" (click)="onSubmit()">
-    <input class="input-field" type="text" formControlName="emailOrPhone" placeholder="Email or Phone">
+  <div
+    class="form"
+    [formGroup]="signInForm"
+    (click)="onSubmit()">
+    <input
+      class="input-field"
+      type="text"
+      formControlName="username"
+      placeholder="Email or Phone" />
 
     <div class="password">
-      <input class="input-field" [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Password">
-      <span class="show-password" (click)="togglePasswordVisibility()">{{ showPassword ? 'hide' : 'show' }}</span>
+      <input
+        class="input-field"
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        placeholder="Password" />
+      <span
+        class="show-password"
+        (click)="togglePasswordVisibility()"
+        >{{ showPassword ? 'hide' : 'show' }}</span
+      >
     </div>
 
-    <a href="#" (click)="onForgotPassword()">Forgot password?</a>
+    <a
+      href="#"
+      (click)="onForgotPassword()"
+      >Forgot password?</a
+    >
     <div>
-      <button type="submit" [disabled]="!signInForm.valid">Sign in</button>
+      <button
+        type="submit"
+        [disabled]="!signInForm.valid">
+        Sign in
+      </button>
     </div>
   </div>
 </div>

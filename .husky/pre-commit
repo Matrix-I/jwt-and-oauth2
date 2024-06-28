@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e
+
+build_api=0;
+build_app=0;
+
+for p in $(git diff --name-only HEAD)
+do
+  if [[ $p == api*.java ]]
+  then
+    build_api=1;
+  fi
+  if [[ $p == gui* ]]
+  then
+    build_app=1;
+  fi
+done
+
+bash "$(dirname -- "$0")/_/husky.sh"
+
+if [ $build_app = 1 ]
+then
+  echo "Prettier and check lint for gui"
+  cd gui
+  yarn lint
+  yarn lint-staged
+  cd ..
+fi
+
+if [ $build_api = 1 ]
+then
+  echo "Check spotless api"
+  cd api
+  if mvn spotless:check@spotless-check; then
+    echo "Good's Format"
+  else echo "Has Some Format Issues. Please Check Code Again"
+    mvn spotless:apply@spotless-check
+    git reset
+    exit 1
+  fi
+  cd ..
+fi
