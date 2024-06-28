@@ -1,6 +1,5 @@
 package fullstack.api.config;
 
-import fullstack.api.exception.ConsistencyException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,18 +30,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     log.info("JWT Authentication Filter the API: {}", request.getServletPath());
 
-    if (request.getServletPath().startsWith("/auth")) {
-      chain.doFilter(request, response);
-      return;
-    }
-
     String jwt = getJwtFromRequest(request);
 
-    if (!StringUtils.hasText(jwt)) {
-      throw new ConsistencyException("Missing JWT token");
-    }
-
-    if (tokenProvider.validateToken(jwt)) {
+    if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
       CustomUserDetails userDetails = tokenProvider.getUserIdFromJWT(jwt);
 
       UsernamePasswordAuthenticationToken authentication =

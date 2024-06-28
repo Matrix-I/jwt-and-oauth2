@@ -16,6 +16,16 @@ spring:
     table: "flyway_schema_history"
     baselineOnMigrate: true
     locations: "classpath:db/migration"
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: "${GITHUB_CLIENT_ID}"
+            clientSecret: "${GITHUB_CLIENT_SECRET}"
+          google:
+            clientId: "${GOOGLE_CLIENT_ID}"
+            clientSecret: "${GOOGLE_CLIENT_SECRET}"
 app:
   jwt-properties:
     secret: "This form allows you to generate random text strings. The randomness comes from atmospheric noise, which for many purposes is better than the pseudo-random number algorithms typically used in computer programs."

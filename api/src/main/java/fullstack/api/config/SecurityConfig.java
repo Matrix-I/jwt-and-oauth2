@@ -3,8 +3,10 @@ package fullstack.api.config;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,13 +17,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableMethodSecurity
+@EnableWebSecurity
 public class SecurityConfig {
-
-  private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
   private static final String[] WHITE_LIST_URL = {
     "/swagger-resources", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**", "/auth/*",
   };
+
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
   public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
     this.jwtAuthenticationFilter = jwtAuthenticationFilter;
@@ -41,6 +44,8 @@ public class SecurityConfig {
                 authorize.requestMatchers(WHITE_LIST_URL).permitAll().anyRequest().authenticated())
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+    http.oauth2Login(Customizer.withDefaults());
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
