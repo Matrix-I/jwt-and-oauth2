@@ -3,7 +3,6 @@ package fullstack.api.config;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,7 +20,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private static final String[] WHITE_LIST_URL = {
-    "/swagger-resources", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**", "/auth/*",
+    "/swagger-resources",
+    "/swagger-resources/**",
+    "/swagger-ui.html",
+    "/swagger-ui/**",
+    "/auth/*/**",
   };
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -45,7 +48,7 @@ public class SecurityConfig {
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-    http.oauth2Login(Customizer.withDefaults());
+    //    http.oauth2Login(Customizer.withDefaults());
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

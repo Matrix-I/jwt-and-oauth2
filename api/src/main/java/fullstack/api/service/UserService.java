@@ -1,8 +1,9 @@
 package fullstack.api.service;
 
-import fullstack.api.openapi.model.LoginRequestDto;
-import fullstack.api.openapi.model.LoginResponseDto;
+import fullstack.api.domain.LoginRequest;
+import fullstack.api.domain.LoginResponse;
+import fullstack.api.exception.ApplicationException;
 
 public interface UserService {
-  LoginResponseDto login(LoginRequestDto loginRequestDto);
+  LoginResponse login(LoginRequest loginRequest) throws ApplicationException;
 }

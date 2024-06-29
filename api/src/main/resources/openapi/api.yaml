@@ -77,15 +77,29 @@ components:
           format: uuid
         username:
           type: string
-        role:
-          type: string
+        roles:
+          description: "The list user roles of login user"
+          items:
+            $ref: "#/components/schemas/UserRole"
+          type: "string"
+      required:
+        - id
+        - username
+        - roles
+    UserRole:
+      enum:
+        - "ROLE_ADMIN"
+        - "ROLE_USER"
+      type: "string"
     LoginResponse:
+      allOf:
+        - $ref: "#/components/schemas/User"
       type: object
       properties:
         token:
           type: string
-        tokenType:
-          type: string
+      required:
+        - token
   requestBodies:
     LoginRequest:
       content:

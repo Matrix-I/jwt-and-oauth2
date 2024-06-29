@@ -1,6 +1,7 @@
 package fullstack.api.exception;
 
 public abstract class ApplicationException extends Exception {
+
   private final String code;
 
   protected ApplicationException(String message) {

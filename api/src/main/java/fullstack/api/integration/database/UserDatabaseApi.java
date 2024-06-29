@@ -1,0 +1,26 @@
+package fullstack.api.integration.database;
+
+import fullstack.api.domain.User;
+import fullstack.api.exception.EntityNotFoundApplicationException;
+import fullstack.api.jpastubs.api.UserRepository;
+import fullstack.api.jpastubs.entity.UserEntity;
+import org.springframework.stereotype.Component;
+
+@Component
+public class UserDatabaseApi {
+
+  private final UserRepository userRepository;
+
+  public UserDatabaseApi(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
+  public User findByUsername(String username) throws EntityNotFoundApplicationException {
+    UserEntity entity =
+        userRepository
+            .findByUsername(username)
+            .orElseThrow(() -> new EntityNotFoundApplicationException(username));
+
+    return UserEntityMapper.mapToDomain(entity);
+  }
+}

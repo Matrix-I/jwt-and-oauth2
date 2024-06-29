@@ -1,6 +1,6 @@
-package fullstack.api.repository;
+package fullstack.api.jpastubs.api;
 
-import fullstack.api.entity.UserEntity;
+import fullstack.api.jpastubs.entity.UserEntity;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

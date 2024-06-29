@@ -1,25 +1,26 @@
 package fullstack.api.config;
 
-import fullstack.api.entity.UserEntity;
+import fullstack.api.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import javax.crypto.SecretKey;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 public class JwtTokenProvider {
-  private static final String AUTHORITIES_KEY = "authorities";
+
+  public static final String AUTHORITIES_KEY = "authorities";
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
   private final ApplicationProperty applicationProperty;
 
@@ -27,52 +28,60 @@ public class JwtTokenProvider {
     this.applicationProperty = applicationProperty;
   }
 
-  public String generateToken(CustomUserDetails userDetails) {
+  public String generateToken(User user) {
     Date now = new Date();
     Date expiryDate =
         new Date(now.getTime() + applicationProperty.getJwtProperties().getExpireTime());
 
     return Jwts.builder()
-        .subject(userDetails.getUsername())
-        .claim(AUTHORITIES_KEY, userDetails.getAuthorities())
+        .subject(user.getUsername())
+        .claim(AUTHORITIES_KEY, user.getRoles())
         .issuedAt(now)
         .expiration(expiryDate)
         .signWith(getKey())
         .compact();
   }
 
-  public CustomUserDetails getUserIdFromJWT(String token) {
-
-    Claims claims =
-        Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
-
-    UserEntity userEntity = new UserEntity();
-    userEntity.setUsername(claims.getSubject());
-    userEntity.setRole(toRoles(claims.get(AUTHORITIES_KEY, ArrayList.class)));
-
-    return new CustomUserDetails(userEntity);
+  public String createToken(Authentication authentication) {
+    //    DefaultOidcUser userPrincipal = (DefaultOidcUser) authentication.getPrincipal();
+    //    Date expiryDate =
+    //
+    // Date.from(Instant.now().plus(this.dccApplicationProperty.getSecurity().getTokenDuration()));
+    //    Map<String, Object> claims = new HashMap<>();
+    //    claims.put(LoginUserConverter.NAME, userPrincipal.getFullName());
+    //    claims.put(LoginUserConverter.EMAIL, userPrincipal.getEmail());
+    //    claims.put(LoginUserConverter.PREFERRED_USERNAME, userPrincipal.getPreferredUsername());
+    //    claims.put(LoginUserConverter.GROUPS,
+    // userPrincipal.getClaims().get(LoginUserConverter.GROUPS));
+    //
+    //    return Jwts.builder()
+    //            .setSubject(userPrincipal.getEmail())
+    //            .setClaims(claims)
+    //            .setIssuedAt(new Date())
+    //            .setExpiration(expiryDate)
+    //            .signWith(
+    //                    Keys.hmacShaKeyFor(
+    //
+    // this.dccApplicationProperty.getSecurity().getTokenSecret().getBytes()),
+    //                    SignatureAlgorithm.HS512)
+    //            .compact();
+    return ";";
   }
 
-  private String toRoles(List<LinkedHashMap<String, String>> authorities) {
-    return authorities.stream()
-        .map(authority -> authority.get("authority"))
-        .collect(Collectors.joining(","));
-  }
-
-  public boolean validateToken(String authToken) {
+  public Optional<Claims> validateTokenThenExtract(String authToken) {
     try {
-      Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(authToken);
-      return true;
+      return Optional.of(
+          Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(authToken).getPayload());
     } catch (MalformedJwtException ex) {
-      log.error("Invalid JWT token");
+      LOGGER.error("Invalid JWT token");
     } catch (ExpiredJwtException ex) {
-      log.error("Expired JWT token");
+      LOGGER.error("Expired JWT token");
     } catch (UnsupportedJwtException ex) {
-      log.error("Unsupported JWT token");
+      LOGGER.error("Unsupported JWT token");
     } catch (IllegalArgumentException ex) {
-      log.error("JWT claims string is empty.");
+      LOGGER.error("JWT claims string is empty.");
     }
-    return false;
+    return Optional.empty();
   }
 
   private SecretKey getKey() {
