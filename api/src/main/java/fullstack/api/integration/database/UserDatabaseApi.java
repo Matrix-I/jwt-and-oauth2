@@ -23,4 +23,13 @@ public class UserDatabaseApi {
 
     return UserEntityMapper.mapToDomain(entity);
   }
+
+  public boolean existsByUsername(String username) {
+    return userRepository.existsByUsername(username);
+  }
+
+  public User save(User user) {
+    UserEntity created = userRepository.save(UserEntityMapper.mapToEntity(user));
+    return UserEntityMapper.mapToDomain(created);
+  }
 }

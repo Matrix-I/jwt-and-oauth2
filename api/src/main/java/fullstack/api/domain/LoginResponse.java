@@ -16,9 +16,9 @@ public class LoginResponse {
     this.token = token;
   }
 
-  public LoginResponse(String username, List<UserRole> roles) {
+  public LoginResponse(String username, String token, List<UserRole> roles) {
     this.id = null;
-    this.token = null;
+    this.token = token;
     this.username = username;
     this.roles = roles;
   }

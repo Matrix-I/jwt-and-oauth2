@@ -24,6 +24,8 @@ public class LoginUserConverter {
             claims.getOrDefault(JwtTokenProvider.AUTHORITIES_KEY, Collections.emptyList());
     List<UserRole> userRoles = roles.stream().map(UserRole::fromValue).toList();
     return new LoginResponse(
-        claims.getOrDefault(LoginUserConverter.EMAIL, StringUtils.EMPTY).toString(), userRoles);
+        claims.getOrDefault(LoginUserConverter.EMAIL, StringUtils.EMPTY).toString(),
+        null,
+        userRoles);
   }
 }
