@@ -26,6 +26,8 @@ spring:
           google:
             clientId: "${GOOGLE_CLIENT_ID}"
             clientSecret: "${GOOGLE_CLIENT_SECRET}"
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
 app:
   jwt-properties:
     secret: "This form allows you to generate random text strings. The randomness comes from atmospheric noise, which for many purposes is better than the pseudo-random number algorithms typically used in computer programs."

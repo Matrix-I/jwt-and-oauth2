@@ -1,18 +1,26 @@
 package fullstack.api.config;
 
+import fullstack.api.domain.LoginResponse;
 import fullstack.api.domain.User;
+import fullstack.api.domain.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.crypto.SecretKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,29 +51,24 @@ public class JwtTokenProvider {
   }
 
   public String createToken(Authentication authentication) {
-    //    DefaultOidcUser userPrincipal = (DefaultOidcUser) authentication.getPrincipal();
-    //    Date expiryDate =
-    //
-    // Date.from(Instant.now().plus(this.dccApplicationProperty.getSecurity().getTokenDuration()));
-    //    Map<String, Object> claims = new HashMap<>();
-    //    claims.put(LoginUserConverter.NAME, userPrincipal.getFullName());
-    //    claims.put(LoginUserConverter.EMAIL, userPrincipal.getEmail());
-    //    claims.put(LoginUserConverter.PREFERRED_USERNAME, userPrincipal.getPreferredUsername());
-    //    claims.put(LoginUserConverter.GROUPS,
-    // userPrincipal.getClaims().get(LoginUserConverter.GROUPS));
-    //
-    //    return Jwts.builder()
-    //            .setSubject(userPrincipal.getEmail())
-    //            .setClaims(claims)
-    //            .setIssuedAt(new Date())
-    //            .setExpiration(expiryDate)
-    //            .signWith(
-    //                    Keys.hmacShaKeyFor(
-    //
-    // this.dccApplicationProperty.getSecurity().getTokenSecret().getBytes()),
-    //                    SignatureAlgorithm.HS512)
-    //            .compact();
-    return ";";
+    OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+    OAuth2User userPrincipal = oauthToken.getPrincipal();
+    Date now = new Date();
+    Date expiryDate =
+        new Date(now.getTime() + applicationProperty.getJwtProperties().getExpireTime());
+
+    String name = userPrincipal.getAttribute("name");
+    Map<String, Object> claims = new HashMap<>();
+    claims.put(LoginUserConverter.NAME, name);
+    claims.put(AUTHORITIES_KEY, List.of("ROLE_USER"));
+
+    return Jwts.builder()
+        .subject(name)
+        .claims(claims)
+        .issuedAt(now)
+        .expiration(expiryDate)
+        .signWith(getKey())
+        .compact();
   }
 
   public Optional<Claims> validateTokenThenExtract(String authToken) {
@@ -82,6 +85,15 @@ public class JwtTokenProvider {
       LOGGER.error("JWT claims string is empty.");
     }
     return Optional.empty();
+  }
+
+  public LoginResponse parseTokenToLoginResponse(String token) {
+    Claims claims =
+        Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
+    String name = (String) claims.getOrDefault(LoginUserConverter.NAME, "");
+    List<String> roles =
+        (List<String>) claims.getOrDefault(AUTHORITIES_KEY, Collections.emptyList());
+    return new LoginResponse(name, token, roles.stream().map(UserRole::fromValue).toList());
   }
 
   private SecretKey getKey() {

@@ -6,4 +6,6 @@ import fullstack.api.exception.ApplicationException;
 
 public interface UserService {
   LoginResponse login(LoginRequest loginRequest) throws ApplicationException;
+
+  LoginResponse login(String token) throws ApplicationException;
 }
