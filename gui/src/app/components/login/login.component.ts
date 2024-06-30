@@ -7,8 +7,8 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { UserServiceImpl } from '../core/service/user.service';
-import { LoginRequest, LoginResponse } from '../../../generated-client';
+import { UserServiceImpl } from '../../core/service/user.service';
+import { LoginRequest, LoginResponse } from '../../../../generated-client';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -52,10 +52,6 @@ export class LoginComponent {
           }
         });
     }
-  }
-
-  signUp() {
-    console.log('TODO');
   }
 
   togglePasswordVisibility() {
