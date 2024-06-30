@@ -51,7 +51,7 @@ public class UserController implements UserApi {
   @GetMapping("/auth/callback")
   public ResponseEntity<Void> githubCallback() {
     return ResponseEntity.status(HttpStatus.FOUND)
-        .header(HttpHeaders.LOCATION, "http://localhost:4200/dashboard")
+        .header(HttpHeaders.LOCATION, "http://localhost:4200")
         .build();
   }
 }

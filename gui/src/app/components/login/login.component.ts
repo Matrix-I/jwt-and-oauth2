@@ -1,5 +1,5 @@
 import { A11yModule } from '@angular/cdk/a11y';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -11,7 +11,7 @@ import { UserServiceImpl } from '../../core/service/user.service';
 import { LoginRequest } from '../../../../generated-client';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { JwtAuthService } from '../../core/auth/jwt-auth.service';
+import { StorageUtils } from '../../utils/storage-utils';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ import { JwtAuthService } from '../../core/auth/jwt-auth.service';
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule, A11yModule]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   signInForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(4)])
@@ -31,10 +31,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private userService: UserServiceImpl,
     private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    if (localStorage.getItem(JwtAuthService.JWT_TOKEN)) {
+  ) {
+    if (StorageUtils.getToken()) {
       this.router.navigate(['']);
     }
   }
