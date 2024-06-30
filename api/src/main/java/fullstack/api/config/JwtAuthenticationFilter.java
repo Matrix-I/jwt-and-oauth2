@@ -32,7 +32,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
-    Optional<String> jwt = Optional.ofNullable(getJwtFromRequest(request));
+    Optional<String> jwt = Cookies.getCookie(request, Cookies.TOKEN_COOKIE_NAME);
+
+    if (jwt.isEmpty()) {
+      jwt = Optional.ofNullable(getJwtFromRequest(request));
+    }
 
     Optional<LoginResponse> loginResponse =
         jwt.filter(StringUtils::hasText)

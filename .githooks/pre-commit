@@ -17,10 +17,6 @@ do
   fi
 done
 
-bash "$(dirname -- "$0")/_/husky.sh"
-
-cd ..
-
 if [ $build_app = 1 ]
 then
   echo "Prettier and check lint for gui"

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public final class Cookies {
 
@@ -50,15 +51,11 @@ public final class Cookies {
   }
 
   public static Optional<String> getCookie(HttpServletRequest request, String name) {
-    Cookie[] cookies = request.getCookies();
-    if (cookies != null) {
-      for (Cookie cookie : cookies) {
-        if (cookie.getName().equals(name)) {
-          return Optional.of(cookie.getValue());
-        }
-      }
-    }
-    return Optional.empty();
+    return Optional.ofNullable(request.getCookies())
+        .flatMap(
+            cookies ->
+                Stream.of(cookies).filter(cookie -> cookie.getName().equals(name)).findFirst())
+        .map(Cookie::getValue);
   }
 
   public static String encodeCookie(String cookieValue) {

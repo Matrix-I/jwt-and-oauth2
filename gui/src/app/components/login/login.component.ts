@@ -1,5 +1,5 @@
 import { A11yModule } from '@angular/cdk/a11y';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,9 +8,10 @@ import {
   Validators
 } from '@angular/forms';
 import { UserServiceImpl } from '../../core/service/user.service';
-import { LoginRequest, LoginResponse } from '../../../../generated-client';
+import { LoginRequest } from '../../../../generated-client';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { JwtAuthService } from '../../core/auth/jwt-auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule, A11yModule]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   signInForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(4)])
@@ -32,6 +33,12 @@ export class LoginComponent {
     private router: Router
   ) {}
 
+  ngOnInit(): void {
+    if (localStorage.getItem(JwtAuthService.JWT_TOKEN)) {
+      this.router.navigate(['']);
+    }
+  }
+
   signIn() {
     if (this.signInForm.valid) {
       const loginRequest: LoginRequest = {
@@ -42,12 +49,10 @@ export class LoginComponent {
         .login(loginRequest)
         .pipe()
         .subscribe({
-          next: (response: LoginResponse) => {
-            console.log(response);
-            this.router.navigate(['/dashboard']);
+          next: () => {
+            this.router.navigate(['']);
           },
           error: (error: HttpErrorResponse) => {
-            console.log(error);
             alert(error.error.err);
           }
         });

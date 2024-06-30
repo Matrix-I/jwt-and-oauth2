@@ -1,11 +1,15 @@
 package fullstack.api.service;
 
+import fullstack.api.config.Cookies;
 import fullstack.api.config.JwtTokenProvider;
 import fullstack.api.domain.LoginRequest;
 import fullstack.api.domain.LoginResponse;
 import fullstack.api.domain.User;
 import fullstack.api.exception.ApplicationException;
+import fullstack.api.exception.ConsistencyException;
 import fullstack.api.integration.database.UserDatabaseApi;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +45,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public LoginResponse login(String token) {
-    return jwtTokenProvider.parseTokenToLoginResponse(token);
+  public LoginResponse login(HttpServletRequest request) {
+    Optional<String> token = Cookies.getCookie(request, Cookies.TOKEN_COOKIE_NAME);
+    if (token.isPresent()) {
+      return jwtTokenProvider.parseTokenToLoginResponse(token.get());
+    }
+    throw new ConsistencyException("Invalid Request. Please check login firstly.");
   }
 }

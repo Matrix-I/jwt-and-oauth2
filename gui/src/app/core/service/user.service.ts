@@ -17,7 +17,15 @@ export class UserServiceImpl {
   login(loginRequest: LoginRequest): Observable<LoginResponse> {
     return this.userService.login(loginRequest).pipe(
       tap((response: LoginResponse) => {
-        this.jwtService.login(response);
+        this.jwtService.storeTokenAfterLogin(response);
+      })
+    );
+  }
+
+  getToken(): Observable<LoginResponse> {
+    return this.userService.getToken().pipe(
+      tap((response: LoginResponse) => {
+        this.jwtService.storeTokenAfterLogin(response);
       })
     );
   }

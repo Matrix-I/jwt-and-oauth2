@@ -27,7 +27,26 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalServerError"
-
+  "/auth/token":
+    get:
+      summary: "Get Token after login success"
+      description: "Get Token after login success"
+      operationId: "getToken"
+      tags:
+        - "user"
+      responses:
+        "200":
+          "$ref": "#/components/responses/LoginResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 components:
   schemas:
     ErrorInfo:
@@ -38,17 +57,17 @@ components:
           description: "The request URL of the failed call."
           example: "https://localhost:8080/testapp/user1"
           readOnly: true
-          type: "string"
+          type: string
         err:
           description: "The error message of the failed request."
           example: "Unable to authenticate 'user1'."
           readOnly: true
-          type: "string"
+          type: string
         code:
           description: "An optional code to further differentiate between error cases."
           example: "PARTIAL_INCIDENT_CLEANUP"
           readOnly: true
-          type: "string"
+          type: string
     User:
       type: object
       properties:
@@ -61,7 +80,7 @@ components:
           description: "The list user roles of login user"
           items:
             $ref: "#/components/schemas/UserRole"
-          type: "string"
+          type: string
       required:
         - id
         - username
@@ -70,7 +89,7 @@ components:
       enum:
         - "ROLE_ADMIN"
         - "ROLE_USER"
-      type: "string"
+      type: string
     LoginResponse:
       allOf:
         - $ref: "#/components/schemas/User"

@@ -3,12 +3,11 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'login',
     loadChildren: () => import('./components/login/routes').then(m => m.routes)
   },
   {
-    path: 'dashboard',
-    pathMatch: 'full',
+    path: '',
     component: DashboardComponent
   }
 ];

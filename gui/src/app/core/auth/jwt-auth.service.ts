@@ -7,14 +7,11 @@ import { LoginResponse } from '../../../../generated-client';
 })
 export class JwtAuthService {
   public static readonly JWT_TOKEN: string = 'JWT_TOKEN';
-  private loggedUser?: string;
   private isAuthenticated: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor() {}
 
-  login(response: LoginResponse): void {
-    console.log(response);
-    this.loggedUser = response.username;
+  storeTokenAfterLogin(response: LoginResponse): void {
     this.storeToken(response.token);
     this.isAuthenticated.next(true);
   }

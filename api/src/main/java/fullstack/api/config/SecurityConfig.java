@@ -26,13 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private static final String[] WHITE_LIST_URL = {
-    "/swagger-resources",
-    "/swagger-resources/**",
-    "/swagger-ui.html",
-    "/swagger-ui/**",
-    "/auth/*/**",
-    "/oauth2/*/**",
-    "/login"
+    "/auth/*/**", "/oauth2/*/**",
   };
 
   private final Environment environment;
