@@ -19,7 +19,8 @@ public class UserDatabaseApi {
     UserEntity entity =
         userRepository
             .findByUsername(username)
-            .orElseThrow(() -> new EntityNotFoundApplicationException(username));
+            .orElseThrow(
+                () -> new EntityNotFoundApplicationException("Username or password not match!"));
 
     return UserEntityMapper.mapToDomain(entity);
   }

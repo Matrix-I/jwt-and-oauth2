@@ -2,6 +2,15 @@
   "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
   "spaces": 2,
   "generator-cli": {
-    "version": "7.6.0"
+    "version": "6.6.0",
+    "storageDir": "~/.cache/openapi-generator",
+    "generators": {
+      "app-rest-client": {
+        "generatorName": "typescript-angular",
+        "output": "./generated-client",
+        "skipValidateSpec": true,
+        "glob": "../api/src/main/resources/openapi/api.yaml"
+      }
+    }
   }
 }

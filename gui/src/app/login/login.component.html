@@ -4,8 +4,7 @@
 
   <div
     class="form"
-    [formGroup]="signInForm"
-    (click)="onSubmit()">
+    [formGroup]="signInForm">
     <input
       class="input-field"
       type="text"
@@ -33,8 +32,18 @@
     <div>
       <button
         type="submit"
+        (click)="signIn()"
         [disabled]="!signInForm.valid">
         Sign in
+      </button>
+    </div>
+
+    <div>
+      <button
+        type="submit"
+        (click)="signUp()"
+        [disabled]="!signInForm.valid">
+        Sign up
       </button>
     </div>
   </div>

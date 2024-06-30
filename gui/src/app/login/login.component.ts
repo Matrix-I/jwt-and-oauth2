@@ -9,6 +9,8 @@ import {
 } from '@angular/forms';
 import { UserServiceImpl } from '../core/service/user.service';
 import { LoginRequest, LoginResponse } from '../../../generated-client';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -25,19 +27,35 @@ export class LoginComponent {
 
   showPassword: boolean = false;
 
-  constructor(private userService: UserServiceImpl) {}
+  constructor(
+    private userService: UserServiceImpl,
+    private router: Router
+  ) {}
 
-  onSubmit() {
+  signIn() {
     if (this.signInForm.valid) {
       const loginRequest: LoginRequest = {
         username: this.signInForm.controls['username'].value,
         password: this.signInForm.controls['password'].value
       };
-      this.userService.login(loginRequest).subscribe((response: LoginResponse) => {
-        localStorage.setItem('access_token', response.token || '');
-        console.log(response);
-      });
+      this.userService
+        .login(loginRequest)
+        .pipe()
+        .subscribe({
+          next: (response: LoginResponse) => {
+            console.log(response);
+            this.router.navigate(['/dashboard']);
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+            alert(error.error.err);
+          }
+        });
     }
+  }
+
+  signUp() {
+    console.log('TODO');
   }
 
   togglePasswordVisibility() {

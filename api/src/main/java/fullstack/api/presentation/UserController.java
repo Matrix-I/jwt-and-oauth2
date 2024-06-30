@@ -39,6 +39,7 @@ public class UserController implements UserApi {
     return ResponseEntity.ok(responseMapper.toDto(loginResponse));
   }
 
+  @PreAuthorize("permitAll()")
   @GetMapping("/auth/callback")
   public ResponseEntity<LoginResponseDto> githubCallback(HttpServletRequest request)
       throws ApplicationException {
@@ -58,6 +59,7 @@ public class UserController implements UserApi {
     return ResponseEntity.ok("Hello This is a test!");
   }
 
+  @PreAuthorize("hasAuthority('ROLE_USER')")
   @GetMapping("/demo")
   public ResponseEntity<String> demo() {
     return ResponseEntity.ok("Hello World!");
