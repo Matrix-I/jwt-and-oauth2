@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public LoginResponse login(String token) throws ApplicationException {
+  public LoginResponse login(String token) {
     return jwtTokenProvider.parseTokenToLoginResponse(token);
   }
 }

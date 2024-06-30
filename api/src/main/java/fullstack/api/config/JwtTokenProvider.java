@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 public class JwtTokenProvider {
@@ -57,13 +58,15 @@ public class JwtTokenProvider {
     Date expiryDate =
         new Date(now.getTime() + applicationProperty.getJwtProperties().getExpireTime());
 
-    String name = userPrincipal.getAttribute("name");
+    String name = userPrincipal.getAttribute(OAuth2Attributes.NAME);
+    String email = userPrincipal.getAttribute(OAuth2Attributes.EMAIL);
     Map<String, Object> claims = new HashMap<>();
-    claims.put(LoginUserConverter.NAME, name);
+    claims.put(OAuth2Attributes.NAME, name);
+    claims.put(OAuth2Attributes.EMAIL, email);
     claims.put(AUTHORITIES_KEY, List.of("ROLE_USER"));
 
     return Jwts.builder()
-        .subject(name)
+        .subject(Optional.ofNullable(email).orElse(name))
         .claims(claims)
         .issuedAt(now)
         .expiration(expiryDate)
@@ -90,10 +93,14 @@ public class JwtTokenProvider {
   public LoginResponse parseTokenToLoginResponse(String token) {
     Claims claims =
         Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
-    String name = (String) claims.getOrDefault(LoginUserConverter.NAME, "");
+    String name = (String) claims.get(OAuth2Attributes.NAME);
+    String email = (String) claims.getOrDefault(OAuth2Attributes.EMAIL, "");
     List<String> roles =
         (List<String>) claims.getOrDefault(AUTHORITIES_KEY, Collections.emptyList());
-    return new LoginResponse(name, token, roles.stream().map(UserRole::fromValue).toList());
+    return new LoginResponse(
+        Optional.of(email).filter(StringUtils::hasText).orElse(name),
+        token,
+        roles.stream().map(UserRole::fromValue).toList());
   }
 
   private SecretKey getKey() {
