@@ -22,12 +22,11 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
       HttpServletRequest request, HttpServletResponse response, Authentication authentication)
       throws IOException {
     String token = tokenProvider.createToken(authentication);
-    Duration tokenCookieDuration = Duration.ofMillis(3600);
     Cookies.addCookie(
         response,
         Cookies.TOKEN_COOKIE_NAME,
         token,
-        Math.toIntExact(tokenCookieDuration.getSeconds()),
+        Math.toIntExact(Duration.ofMillis(3600).getSeconds()),
         true);
     this.getRedirectStrategy().sendRedirect(request, response, "/auth/callback");
   }

@@ -38,13 +38,19 @@
       </button>
     </div>
 
-    <div>
-      <button
-        type="submit"
-        (click)="signUp()"
-        [disabled]="!signInForm.valid">
-        Sign up
-      </button>
+    <div class="oauth2-sign-in">
+      <a href="/api/oauth2/authorization/github">
+        <img
+          class="oauth2-sign-in__icon"
+          src="assets/icons/github.svg"
+          alt="github" />
+      </a>
+      <a href="http://localhost:8080/api/oauth2/authorization/google">
+        <img
+          class="oauth2-sign-in__icon"
+          src="assets/icons/google.svg"
+          alt="google" />
+      </a>
     </div>
   </div>
 </div>

@@ -74,3 +74,13 @@ button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+.oauth2-sign-in {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  justify-content: center;
+  .__icon {
+    cursor: pointer;
+  }
+}

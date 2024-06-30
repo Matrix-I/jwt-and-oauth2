@@ -9,6 +9,8 @@ public class ApplicationProperty {
 
   private JwtProperties jwtProperties;
 
+  private FrontendEdge frontendEdge;
+
   public static class JwtProperties {
     private String secret;
     private long expireTime;
@@ -30,8 +32,38 @@ public class ApplicationProperty {
     }
   }
 
+  public static class FrontendEdge {
+    private String apiBasePath;
+
+    private String guiBaseHref;
+
+    public String getApiBasePath() {
+      return apiBasePath;
+    }
+
+    public void setApiBasePath(String apiBasePath) {
+      this.apiBasePath = apiBasePath;
+    }
+
+    public String getGuiBaseHref() {
+      return guiBaseHref;
+    }
+
+    public void setGuiBaseHref(String guiBaseHref) {
+      this.guiBaseHref = guiBaseHref;
+    }
+  }
+
   public JwtProperties getJwtProperties() {
     return jwtProperties;
+  }
+
+  public FrontendEdge getFrontendEdge() {
+    return frontendEdge;
+  }
+
+  public void setFrontendEdge(FrontendEdge frontendEdge) {
+    this.frontendEdge = frontendEdge;
   }
 
   public void setJwtProperties(JwtProperties jwtProperties) {

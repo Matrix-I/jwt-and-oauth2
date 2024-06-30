@@ -52,16 +52,4 @@ public class UserController implements UserApi {
     LoginResponse loginResponse = userService.login(token);
     return ResponseEntity.ok(responseMapper.toDto(loginResponse));
   }
-
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-  @GetMapping("/test")
-  public ResponseEntity<String> test() {
-    return ResponseEntity.ok("Hello This is a test!");
-  }
-
-  @PreAuthorize("hasAuthority('ROLE_USER')")
-  @GetMapping("/demo")
-  public ResponseEntity<String> demo() {
-    return ResponseEntity.ok("Hello World!");
-  }
 }

@@ -85,10 +85,10 @@ public class SecurityConfig {
   private ClientRegistration githubClientRegistration() {
     return ClientRegistration.withRegistrationId("github")
         .clientId(
-            environment.getProperty("spring.security.oauth2.client.registration.github.clientId"))
+            environment.getProperty("spring.security.oauth2.client.registration.github.client-id"))
         .clientSecret(
             environment.getProperty(
-                "spring.security.oauth2.client.registration.github.clientSecret"))
+                "spring.security.oauth2.client.registration.github.client-secret"))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .redirectUri("{baseUrl}/login/oauth2/code/github")
@@ -104,10 +104,10 @@ public class SecurityConfig {
   private ClientRegistration googleClientRegistration() {
     return ClientRegistration.withRegistrationId("google")
         .clientId(
-            environment.getProperty("spring.security.oauth2.client.registration.google.clientId"))
+            environment.getProperty("spring.security.oauth2.client.registration.google.client-id"))
         .clientSecret(
             environment.getProperty(
-                "spring.security.oauth2.client.registration.google.clientSecret"))
+                "spring.security.oauth2.client.registration.google.client-secret"))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
